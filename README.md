@@ -8,6 +8,7 @@ When running MultispeakerTranscription, it currently expects to have an `Intervi
 
 ### What is this $SHELL
 *Note: This guide is currently Unix-centric*
+
 Python scripts are run from the command line (on macOS, this can be done with the bulit-in Terminal application). You are probably running the zsh shell, but to know for sure you can run `basename $SHELL`.
 
 To set an environment variable, you can run `export <ENV_VAR_NAME>=<ENV_VAR_VALUE>`. However, this only lasts until you close the window or application. To persist the value, put that line in your shell's config file. For bash, this would be `~/.bash_profile` and for zsh, it would be `~/.zshrc`. For the change to take effect, either open a new window or run `source <that file>`. The config file gets run every time you start a new shell session.
