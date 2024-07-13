@@ -4,6 +4,8 @@ Script to do multispeaker transcription with immediate transcript deletion.
 ## How do I use this?
 Currently this uses AssemblyAI on the backend. Sign up for a free (up to 100 hours) account [here](https://www.assemblyai.com/dashboard/signup) and get your API key. The script will check for the API key value at $MULTISPEAKER_API. I recommend setting the value in your shell's config file. For those not comfortable in the shell, see below. The script will check that the value is set and exit if not.
 
+You'll need to run `pip3 install assemblyai` (should work for macOS users) or `pip install assemblyai`, as applicable until I automate this.
+
 When running MultispeakerTranscription, it currently expects to have an `Interviews` directory and a `Transcripts` directory in the same directory where it is being run. For example, if you have downloaded this file to `~/Downloads`, there should be `~/Downloads/Interviews` and `~/Downloads/Transcripts`. Then you can run this with `python3 MultiSpeakerTranscriber.py <filename>`. You only need to provide the file name. 
 
 ### What is this $SHELL
