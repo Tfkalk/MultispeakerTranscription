@@ -4,12 +4,12 @@ import sys
 import argparse
 
 # Methods
-def transcribe_file(file):
+def transcribe_file(path, file):
 	# Chop off extension from file
 	filename = os.path.splitext(file)[0]
 	
 	try:
-		f = open("./Transcripts/" + filename + ".txt", "x")
+		f = open(filename + ".txt", "x")
 	except FileExistsError:
 		print("A transcript with this name already exists. Please delete that transcript or provide a different file.")
 		sys.exit(4)
@@ -21,13 +21,15 @@ def transcribe_file(file):
 
 	transcriber = aai.Transcriber()
 
-	print("Proceeding to transcribe the file.")
-
+	print("Proceeding to transcribe the file: " + file)
+	
 	transcript = transcriber.transcribe(
-		file,
+		os.path.join(path, file),
 		config=config
 	)
 
+	if transcript.status == aai.TranscriptStatus.error:
+		print(f"Transcription failed: {transcript.error}")
 
 	# Write to the file.
 	print("Generating file.")
@@ -37,7 +39,7 @@ def transcribe_file(file):
 	f.close()
 
 	# Delete the transcript so the only copy is local.
-	print("Proceeding to transcript id: " + transcript.id)
+	print("Proceeding to delete transcript id: " + transcript.id)
 	transcript.delete_by_id(transcript.id)
 
 API_KEY = os.getenv("MULTISPEAKER_API")
@@ -48,6 +50,23 @@ if API_KEY is None:
 # Take in an argument of the file
 parser = argparse.ArgumentParser("MultispeakerTranscribe")
 parser.add_argument("--file", dest='audio', help="The path of the audio file to be transcribed.")
+parser.add_argument("--batch", dest='directory', help="A directory of files to transcribe. All files will be submitted for transcription.")
 args = parser.parse_args()
 
-transcribe_file(args.audio)
+if args.audio is not None:
+	transcribe_file(".", args.audio)
+	
+if args.directory is not None:
+	path = args.directory
+
+	if os.path.isdir(path) is False:
+		print("Must provide a directory to use with the batch flag.")
+		sys.exit(5)
+
+	# Iterate through the files.
+	onlyfiles = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+	print("Proceeding to process files in " + path)
+	for file in onlyfiles:
+		if file != ".DS_Store":
+			transcribe_file(path, file)
+	
