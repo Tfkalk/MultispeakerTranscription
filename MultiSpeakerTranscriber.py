@@ -3,24 +3,11 @@ import os
 import sys
 import argparse
 
-API_KEY = os.getenv("MULTISPEAKER_API")
-if API_KEY is None:
-	print("You are missing a value at $ASSEMBLY_AI_API. Set your API key and run again")
-	sys.exit(3)
-	
-# Take in an argument of the file
-parser = argparse.ArgumentParser("MultispeakerTranscribe")
-parser.add_argument("audio", help="The filename of an audio file to be transcribed.")
-args = parser.parse_args()
-
-transcribe_file(args.audio)
-
-
 # Methods
 def transcribe_file(file):
 	# Chop off extension from file
 	filename = os.path.splitext(file)[0]
-
+	
 	try:
 		f = open("./Transcripts/" + filename + ".txt", "x")
 	except FileExistsError:
@@ -37,7 +24,7 @@ def transcribe_file(file):
 	print("Proceeding to transcribe the file.")
 
 	transcript = transcriber.transcribe(
-		"./Interviews/"+file,
+		file,
 		config=config
 	)
 
@@ -52,3 +39,15 @@ def transcribe_file(file):
 	# Delete the transcript so the only copy is local.
 	print("Proceeding to transcript id: " + transcript.id)
 	transcript.delete_by_id(transcript.id)
+
+API_KEY = os.getenv("MULTISPEAKER_API")
+if API_KEY is None:
+	print("You are missing a value at $ASSEMBLY_AI_API. Set your API key and run again")
+	sys.exit(3)
+	
+# Take in an argument of the file
+parser = argparse.ArgumentParser("MultispeakerTranscribe")
+parser.add_argument("--file", dest='audio', help="The path of the audio file to be transcribed.")
+args = parser.parse_args()
+
+transcribe_file(args.audio)

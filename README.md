@@ -8,7 +8,7 @@ You'll need to run `pip3 install assemblyai` (should work for macOS users) or `p
 
 When running MultispeakerTranscription, it currently expects to have an `Interviews` directory and a `Transcripts` directory in the same directory where it is being run. For example, if you have downloaded this file to `~/Downloads`, there should be `~/Downloads/Interviews` and `~/Downloads/Transcripts`. Then you can run this with `python3 MultiSpeakerTranscriber.py "<filename>"`. You only need to provide the file name. I recommend including quotation marks around to avoid splitting.
 
-Example: `python3 MultiSpeakerTranscriber.py "Montgomery Ward 1873-11-02.m4a"`
+Example: `python3 MultiSpeakerTranscriber.py --file "Montgomery Ward 1873-11-02.m4a"`
 
 ### What is this $SHELL
 *Note: This guide is currently Unix-centric*
