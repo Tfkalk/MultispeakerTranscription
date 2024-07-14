@@ -13,38 +13,42 @@ parser = argparse.ArgumentParser("MultispeakerTranscribe")
 parser.add_argument("audio", help="The filename of an audio file to be transcribed.")
 args = parser.parse_args()
 
-# Chop off extension from file
-file = args.audio
-filename = os.path.splitext(file)[0]
+transcribe_file(args.audio)
 
-try:
-	f = open("./Transcripts/" + filename + ".txt", "x")
-except FileExistsError:
-	print("A transcript with this name already exists. Please delete that transcript or provide a different file.")
-	sys.exit(4)
+
+# Methods
+def transcribe_file(file):
+	# Chop off extension from file
+	filename = os.path.splitext(file)[0]
+
+	try:
+		f = open("./Transcripts/" + filename + ".txt", "x")
+	except FileExistsError:
+		print("A transcript with this name already exists. Please delete that transcript or provide a different file.")
+		sys.exit(4)
 	
 
-# Transcribe the audio.
-aai.settings.api_key = API_KEY
-config = aai.TranscriptionConfig(speaker_labels=True)
+	# Transcribe the audio.
+	aai.settings.api_key = API_KEY
+	config = aai.TranscriptionConfig(speaker_labels=True)
 
-transcriber = aai.Transcriber()
+	transcriber = aai.Transcriber()
 
-print("Proceeding to transcribe the file.")
+	print("Proceeding to transcribe the file.")
 
-transcript = transcriber.transcribe(
-	"./Interviews/"+file,
-	config=config
-)
+	transcript = transcriber.transcribe(
+		"./Interviews/"+file,
+		config=config
+	)
 
 
-# Write to the file.
-print("Generating file.")
-for utterance in transcript.utterances:
-  f.write(f"Speaker {utterance.speaker}: {utterance.text}\n")
+	# Write to the file.
+	print("Generating file.")
+	for utterance in transcript.utterances:
+	  f.write(f"Speaker {utterance.speaker}: {utterance.text}\n")
 
-f.close()
+	f.close()
 
-# Delete the transcript so the only copy is local.
-print("Proceeding to transcript id: " + transcript.id)
-transcript.delete_by_id(transcript.id)
+	# Delete the transcript so the only copy is local.
+	print("Proceeding to transcript id: " + transcript.id)
+	transcript.delete_by_id(transcript.id)
