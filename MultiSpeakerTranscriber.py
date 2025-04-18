@@ -2,6 +2,7 @@ import assemblyai as aai
 import os
 import sys
 import argparse
+from decimal import Decimal
 
 # Methods
 def transcribe_file(path, file):
@@ -34,7 +35,8 @@ def transcribe_file(path, file):
 	# Write to the file.
 	print("Generating file.")
 	for utterance in transcript.utterances:
-	  f.write(f"Speaker {utterance.speaker}: {utterance.text}\n")
+	  seconds = Decimal(utterance.start) / 1000
+	  f.write(f"Speaker {utterance.speaker} @{seconds}sec: {utterance.text}\n")
 
 	f.close()
 
